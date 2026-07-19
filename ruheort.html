@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mein Ruheort</title>
+<meta name="theme-color" content="#F6F1F4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Ruheort">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='42' fill='%23F0DFEA'/%3E%3Ccircle cx='50' cy='50' r='26' fill='%23A0648C'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23F6F1F4'/%3E%3Ccircle cx='50' cy='50' r='30' fill='%23A0648C'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F1F4;
+  --card:#FFFFFF;
+  --ink:#43364A;
+  --muted:#8A7A90;
+  --line:#EBE2E8;
+  --accent:#A0648C;
+  --accent-deep:#7E4A6E;
+  --accent-soft:#F0DFEA;
+  --sage:#6E9480;
+  --sage-soft:#E3EDE6;
+  --peach:#F3DFD3;
+  --gold:#C9A24B;
+  --r:20px;
+  --shadow:0 4px 18px rgba(67,54,74,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Karla',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  font-size:16px;line-height:1.55;
+  padding-bottom:calc(86px + env(safe-area-inset-bottom));
+  min-height:100vh;
+}
+h1,h2,h3,.serif{font-family:'Fraunces',Georgia,serif;font-weight:600;letter-spacing:.2px}
+.app{max-width:520px;margin:0 auto;padding:18px 16px 0}
+header.top{display:flex;align-items:baseline;justify-content:space-between;padding:6px 2px 14px}
+header.top h1{font-size:1.35rem;color:var(--accent-deep)}
+header.top .date{font-size:.82rem;color:var(--muted)}
+.tab{display:none;animation:fade .25s ease}
+.tab.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;margin-bottom:14px;border:1px solid var(--line)}
+.card h2{font-size:1.05rem;margin-bottom:10px;color:var(--accent-deep)}
+.card h3{font-size:.95rem;margin:12px 0 6px}
+.eyebrow{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700;margin-bottom:4px}
+.hint{font-size:.82rem;color:var(--muted)}
+button{font-family:inherit;font-size:.95rem;border:none;border-radius:14px;padding:11px 16px;cursor:pointer;font-weight:700}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:active{background:var(--accent-deep)}
+.btn-ghost{background:var(--accent-soft);color:var(--accent-deep)}
+.btn-sage{background:var(--sage);color:#fff}
+.btn-small{padding:7px 12px;font-size:.82rem;border-radius:10px}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+input[type=text],input[type=number],textarea,select{
+  width:100%;font-family:inherit;font-size:.95rem;color:var(--ink);
+  background:#FBF8FA;border:1px solid var(--line);border-radius:12px;padding:10px 12px;
+}
+textarea{resize:vertical;min-height:70px}
+label{font-size:.82rem;font-weight:700;color:var(--muted);display:block;margin:10px 0 4px}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+/* Stimmung */
+.moods{display:flex;justify-content:space-between;gap:6px;margin:8px 0 4px}
+.mood{flex:1;font-size:1.7rem;background:#FBF8FA;border:2px solid var(--line);border-radius:16px;padding:10px 0;text-align:center;transition:transform .15s}
+.mood.sel{border-color:var(--accent);background:var(--accent-soft);transform:scale(1.08)}
+.slider-wrap{display:flex;align-items:center;gap:12px}
+input[type=range]{flex:1;accent-color:var(--accent)}
+.slider-val{font-family:'Fraunces',serif;font-size:1.2rem;min-width:2ch;text-align:center;color:var(--accent-deep)}
+/* Checkliste */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chip{background:#FBF8FA;border:1.5px solid var(--line);border-radius:999px;padding:8px 14px;font-size:.85rem;font-weight:500;color:var(--ink)}
+.chip.on{background:var(--sage-soft);border-color:var(--sage);color:var(--sage)}
+.chip.on-accent{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+/* Affirmation */
+.affirm{background:linear-gradient(135deg,var(--accent-soft),var(--peach));border:none}
+.affirm p{font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.45;color:var(--accent-deep)}
+/* Atemübung – Signatur */
+.breath-stage{display:flex;flex-direction:column;align-items:center;padding:22px 0 8px}
+.bloom{position:relative;width:210px;height:210px;display:flex;align-items:center;justify-content:center}
+.bloom .petal{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 40% 35%, #E9CFE0, var(--accent-soft));opacity:.85;transform:scale(.6);transition:transform .3s ease}
+.bloom .petal.p2{background:radial-gradient(circle at 60% 65%, #DCE9E0, var(--sage-soft));mix-blend-mode:multiply}
+.bloom .core{position:relative;width:120px;height:120px;border-radius:50%;background:#fff;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2}
+.bloom .phase{font-family:'Fraunces',serif;font-size:1.05rem;color:var(--accent-deep)}
+.bloom .count{font-size:1.9rem;font-family:'Fraunces',serif;color:var(--ink)}
+.breathing .petal{transition:transform var(--dur,4s) cubic-bezier(.4,0,.4,1)}
+.breath-modes{display:flex;gap:8px;justify-content:center;margin:14px 0 4px;flex-wrap:wrap}
+@media (prefers-reduced-motion: reduce){
+  .bloom .petal{transition:none !important}
+  .tab{animation:none}
+}
+/* Grounding */
+.ground-step{text-align:center;padding:10px 0}
+.ground-step .big{font-family:'Fraunces',serif;font-size:2.6rem;color:var(--accent)}
+.ground-step .sense{font-size:1.05rem;font-weight:700;margin:2px 0 6px}
+/* SOS Anker */
+.anchor-list{list-style:none}
+.anchor-list li{background:#FBF8FA;border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:10px 12px;margin-bottom:8px;font-family:'Fraunces',serif;font-size:.98rem}
+/* Panik-Log */
+.intensity-scale{display:flex;gap:4px;margin-top:4px}
+.intensity-scale button{flex:1;padding:9px 0;border-radius:8px;background:#FBF8FA;border:1.5px solid var(--line);font-size:.82rem;color:var(--muted)}
+.intensity-scale button.sel{background:var(--accent);border-color:var(--accent);color:#fff}
+/* Listen / Verlauf */
+.entry{border-bottom:1px solid var(--line);padding:12px 2px}
+.entry:last-child{border-bottom:none}
+.entry .meta{font-size:.78rem;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:3px}
+.entry .body{font-size:.92rem;white-space:pre-wrap}
+.tagline{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.tag{font-size:.72rem;background:var(--sage-soft);color:var(--sage);border-radius:999px;padding:3px 9px;font-weight:700}
+.tag.mauve{background:var(--accent-soft);color:var(--accent-deep)}
+/* Chart */
+.chart-wrap{overflow-x:auto}
+svg text{font-family:'Karla',sans-serif}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.stat{background:#FBF8FA;border-radius:14px;padding:12px;text-align:center}
+.stat .v{font-family:'Fraunces',serif;font-size:1.5rem;color:var(--accent-deep)}
+.stat .l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+/* Ideen */
+.idea{display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid var(--line)}
+.idea:last-child{border:none}
+.idea .txt{flex:1;font-size:.92rem}
+.idea .dur{font-size:.7rem;background:var(--peach);border-radius:999px;padding:3px 8px;font-weight:700;color:#9A6B4B;white-space:nowrap}
+.idea .fav{background:none;font-size:1.15rem;padding:4px;color:var(--line)}
+.idea .fav.on{color:var(--gold)}
+.draw-card{background:linear-gradient(150deg,var(--sage-soft),var(--accent-soft));text-align:center;border:none}
+.draw-card .drawn{font-family:'Fraunces',serif;font-size:1.1rem;margin:10px 0;color:var(--accent-deep);min-height:1.4em}
+/* Navigation */
+nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:50;
+  background:rgba(255,255,255,.94);backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);
+  padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+}
+.nav-inner{max-width:520px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-around}
+.nav-btn{background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.62rem;font-weight:700;color:var(--muted);padding:4px 5px;border-radius:12px}
+/* Baby-Tab */
+.feed-status{background:#FBF8FA;border-radius:14px;padding:12px;text-align:center;margin-bottom:10px}
+.feed-status .big{font-family:'Fraunces',serif;font-size:1.25rem;color:var(--accent-deep)}
+.side-btns{display:flex;gap:10px}
+.side-btns button{flex:1;padding:16px 0;font-size:1rem;border-radius:16px;background:var(--accent-soft);color:var(--accent-deep)}
+.side-btns button.running{background:var(--accent);color:#fff;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.75}}
+.counter{display:flex;align-items:center;justify-content:space-between;background:#FBF8FA;border-radius:14px;padding:10px 14px;margin-top:8px}
+.counter .v{font-family:'Fraunces',serif;font-size:1.4rem;color:var(--accent-deep);min-width:2ch;text-align:center}
+.counter button{width:40px;height:40px;border-radius:50%;font-size:1.2rem;background:var(--accent-soft);color:var(--accent-deep);padding:0}
+@media (prefers-reduced-motion: reduce){.side-btns button.running{animation:none}}
+.nav-btn .ic{font-size:1.25rem;line-height:1}
+.nav-btn.active{color:var(--accent-deep)}
+.nav-btn.sos{
+  background:var(--accent);color:#fff;border-radius:50%;width:62px;height:62px;
+  justify-content:center;margin-top:-26px;box-shadow:0 6px 18px rgba(160,100,140,.4);
+  font-size:.62rem;
+}
+.nav-btn.sos .ic{font-size:1.5rem}
+.nav-btn.sos.active{background:var(--accent-deep);color:#fff}
+.notice{font-size:.78rem;color:var(--muted);background:#FBF8FA;border-radius:12px;padding:10px 12px;margin-top:12px}
+.toast{
+  position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:#fff;border-radius:999px;padding:9px 18px;font-size:.85rem;
+  opacity:0;transition:.3s;z-index:99;pointer-events:none;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.mt{margin-top:12px}
+.center{text-align:center}
+details summary{cursor:pointer;font-weight:700;font-size:.88rem;color:var(--accent-deep)}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <h1 id="greeting">Hallo</h1>
+  <span class="date" id="todayDate"></span>
+</header>
+
+<!-- ============ HEUTE ============ -->
+<section class="tab active" id="tab-heute">
+  <div class="card affirm">
+    <div class="eyebrow">Gedanke für heute</div>
+    <p id="affirmText"></p>
+  </div>
+
+  <div class="card">
+    <h2>Wie geht es dir gerade?</h2>
+    <div class="moods" id="moodRow">
+      <button class="mood" data-v="1" aria-label="Sehr schlecht">😞</button>
+      <button class="mood" data-v="2" aria-label="Eher schlecht">😕</button>
+      <button class="mood" data-v="3" aria-label="Okay">😐</button>
+      <button class="mood" data-v="4" aria-label="Gut">🙂</button>
+      <button class="mood" data-v="5" aria-label="Sehr gut">😄</button>
+    </div>
+    <label for="energy">Energie</label>
+    <div class="slider-wrap">
+      <input type="range" id="energy" min="1" max="10" value="5">
+      <span class="slider-val" id="energyVal">5</span>
+    </div>
+    <label for="checkinNote">Notiz (optional)</label>
+    <textarea id="checkinNote" placeholder="Was beschäftigt dich, was war schön?"></textarea>
+    <button class="btn-primary mt" id="saveCheckin" style="width:100%">Check-in speichern</button>
+    <div class="hint mt" id="checkinToday"></div>
+  </div>
+
+  <div class="card">
+    <h2>Wie war deine Nacht?</h2>
+    <label for="sleepHours">Schlaf gesamt (Stunden)</label>
+    <div class="slider-wrap">
+      <input type="range" id="sleepHours" min="0" max="12" step="0.5" value="6">
+      <span class="slider-val" id="sleepHoursVal">6</span>
+    </div>
+    <label for="sleepWakes">Wie oft aufgewacht?</label>
+    <div class="slider-wrap">
+      <input type="range" id="sleepWakes" min="0" max="10" value="2">
+      <span class="slider-val" id="sleepWakesVal">2</span>
+    </div>
+    <button class="btn-ghost mt" id="saveSleep" style="width:100%">Nacht speichern</button>
+    <div class="hint mt" id="sleepInfo"></div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h2>Kleine Dinge für dich</h2>
+      <button class="btn-ghost btn-small" id="wbToggle">Wochenbett-Modus</button>
+    </div>
+    <p class="hint">Tippe an, was du dir heute schon gegönnt hast.</p>
+    <div class="chips" id="careChips"></div>
+  </div>
+</section>
+
+<!-- ============ RUHE / SOS ============ -->
+<section class="tab" id="tab-ruhe">
+  <div class="card center" style="border:none;background:linear-gradient(160deg,#fff,var(--accent-soft))">
+    <h2>Du bist sicher. Das geht vorbei.</h2>
+    <p class="hint">Atme mit dem Kreis. Alles andere darf warten.</p>
+    <div class="breath-stage">
+      <div class="bloom" id="bloom">
+        <div class="petal p1"></div>
+        <div class="petal p2"></div>
+        <div class="core">
+          <span class="phase" id="breathPhase">Bereit?</span>
+          <span class="count" id="breathCount">·</span>
+        </div>
+      </div>
+    </div>
+    <div class="breath-modes">
+      <button class="btn-ghost btn-small breath-mode sel" data-mode="calm">Ruhig 5·5</button>
+      <button class="btn-ghost btn-small breath-mode" data-mode="478">4·7·8</button>
+      <button class="btn-ghost btn-small breath-mode" data-mode="box">Box 4·4·4·4</button>
+    </div>
+    <button class="btn-primary mt" id="breathToggle" style="min-width:180px">Atmen starten</button>
+  </div>
+
+  <div class="card">
+    <h2>5-4-3-2-1 · Zurück ins Hier</h2>
+    <p class="hint">Eine Übung, die dich über deine Sinne erdet.</p>
+    <div class="ground-step" id="groundStep" hidden>
+      <div class="big" id="groundNum">5</div>
+      <div class="sense" id="groundSense"></div>
+      <p class="hint" id="groundHint"></p>
+    </div>
+    <div class="row mt">
+      <button class="btn-sage" id="groundStart">Übung starten</button>
+      <button class="btn-ghost" id="groundNext" hidden>Weiter</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Deine Anker</h2>
+    <p class="hint">Sätze von dir, für dich – für schwere Momente.</p>
+    <ul class="anchor-list mt" id="anchorList"></ul>
+    <div class="row mt">
+      <input type="text" id="anchorInput" placeholder="Neuen Anker-Satz hinzufügen">
+      <button class="btn-ghost btn-small" id="anchorAdd" style="flex:0 0 auto">+</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Moment festhalten</h2>
+    <p class="hint">Wenn es dir wieder besser geht: Kurz notieren hilft, Muster zu erkennen.</p>
+    <label>Wie stark war es? (1 = leicht, 10 = sehr stark)</label>
+    <div class="intensity-scale" id="intensityScale"></div>
+    <label for="panicTrigger">Auslöser (falls bekannt)</label>
+    <input type="text" id="panicTrigger" placeholder="z. B. Menschenmenge, Stress, unklar …">
+    <label>Was hat geholfen?</label>
+    <div class="chips" id="helpedChips"></div>
+    <label for="panicNote">Notiz</label>
+    <textarea id="panicNote" placeholder="Optional"></textarea>
+    <button class="btn-primary mt" id="savePanic" style="width:100%">Eintrag speichern</button>
+  </div>
+
+  <div class="card">
+    <h2>Ich brauche Hilfe – Sätze</h2>
+    <p class="hint">Um Hilfe bitten ist schwer. Tippe einen Satz an, um ihn zu kopieren und direkt zu verschicken.</p>
+    <ul class="anchor-list mt" id="helpList"></ul>
+    <div class="row mt">
+      <input type="text" id="helpInput" placeholder="Eigenen Satz hinzufügen">
+      <button class="btn-ghost btn-small" id="helpAdd" style="flex:0 0 auto">+</button>
+    </div>
+  </div>
+
+  <div class="notice">
+    Diese App ersetzt keine ärztliche oder therapeutische Hilfe. Wenn die Angst häufiger wird oder dich stark belastet, sprich mit deiner Ärztin oder einem Therapeuten. Telefonseelsorge (kostenlos, rund um die Uhr): 0800&nbsp;111&nbsp;0&nbsp;111.
+  </div>
+</section>
+
+<!-- ============ TAGEBUCH ============ -->
+<section class="tab" id="tab-tagebuch">
+  <div class="card">
+    <h2>Drei gute Dinge</h2>
+    <p class="hint">Klein zählt genauso wie groß.</p>
+    <input type="text" class="mt" id="grat1" placeholder="1.">
+    <input type="text" class="mt" id="grat2" placeholder="2." style="margin-top:8px">
+    <input type="text" class="mt" id="grat3" placeholder="3." style="margin-top:8px">
+    <button class="btn-sage mt" id="saveGrat" style="width:100%">Speichern</button>
+  </div>
+
+  <div class="card">
+    <h2>Freies Schreiben</h2>
+    <div class="eyebrow" style="margin-top:4px">Impuls</div>
+    <p class="serif" id="promptText" style="font-size:.98rem;color:var(--accent-deep)"></p>
+    <button class="btn-ghost btn-small mt" id="newPrompt">Anderer Impuls</button>
+    <textarea class="mt" id="journalText" placeholder="Schreib einfach los …" style="min-height:120px"></textarea>
+    <button class="btn-primary mt" id="saveJournal" style="width:100%">Eintrag speichern</button>
+  </div>
+
+  <div class="card">
+    <h2>Letzte Einträge</h2>
+    <div id="journalList"><p class="hint">Noch keine Einträge.</p></div>
+  </div>
+</section>
+
+<!-- ============ RÜCKBLICK ============ -->
+<section class="tab" id="tab-rueckblick">
+  <div class="card">
+    <h2>Stimmung · letzte 14 Tage</h2>
+    <div class="chart-wrap" id="moodChart"><p class="hint">Noch keine Check-ins.</p></div>
+  </div>
+  <div class="card">
+    <h2>Auf einen Blick</h2>
+    <div class="statgrid" id="statGrid"></div>
+  </div>
+  <div class="card">
+    <h2>Was dir hilft</h2>
+    <p class="hint">Aus deinen Einträgen zu schweren Momenten.</p>
+    <div id="helpStats" class="mt"><p class="hint">Noch keine Daten.</p></div>
+  </div>
+  <div class="card">
+    <h2>Schwere Momente</h2>
+    <div id="panicList"><p class="hint">Keine Einträge – schön!</p></div>
+  </div>
+  <div class="card">
+    <h2>Daten</h2>
+    <div class="row">
+      <button class="btn-ghost" id="exportBtn">Sichern (Export)</button>
+      <button class="btn-ghost" id="importBtn">Wiederherstellen</button>
+    </div>
+    <input type="file" id="importFile" accept=".json" hidden>
+    <p class="hint mt">Alles bleibt nur auf diesem Gerät gespeichert.</p>
+  </div>
+</section>
+
+<!-- ============ BABY ============ -->
+<section class="tab" id="tab-baby">
+  <div class="card">
+    <h2>Stillen</h2>
+    <div class="feed-status">
+      <div class="hint">Zuletzt</div>
+      <div class="big" id="feedStatus">Noch kein Eintrag</div>
+      <div class="hint" id="feedHint"></div>
+    </div>
+    <div class="side-btns">
+      <button id="feedL">🤱 Links</button>
+      <button id="feedR">Rechts 🤱</button>
+    </div>
+    <div class="center mt" id="feedTimer" hidden>
+      <span class="serif" style="font-size:1.6rem;color:var(--accent-deep)" id="feedElapsed">0:00</span>
+      <div class="mt"><button class="btn-primary" id="feedStop">Beenden &amp; speichern</button></div>
+    </div>
+    <details class="mt">
+      <summary>Manuell eintragen (auch Flasche / abgepumpt)</summary>
+      <div class="row mt">
+        <select id="manSide">
+          <option value="L">Links</option>
+          <option value="R">Rechts</option>
+          <option value="B">Beide</option>
+          <option value="F">Flasche</option>
+          <option value="A">Abgepumpte Milch</option>
+        </select>
+        <input type="number" id="manDur" placeholder="Min" min="1" max="120">
+      </div>
+      <button class="btn-ghost btn-small mt" id="manSave">Speichern</button>
+    </details>
+    <div class="hint mt" id="feedToday"></div>
+  </div>
+
+  <div class="card">
+    <h2>Abpumpen</h2>
+    <div class="row">
+      <input type="number" id="pumpMl" placeholder="Menge in ml" min="1">
+      <select id="pumpSide" style="flex:0 0 110px">
+        <option value="B">Beide</option>
+        <option value="L">Links</option>
+        <option value="R">Rechts</option>
+      </select>
+    </div>
+    <button class="btn-sage mt" id="pumpSave" style="width:100%">Eintragen</button>
+    <div class="hint mt" id="pumpToday"></div>
+  </div>
+
+  <div class="card">
+    <h2>Baby-Schlaf</h2>
+    <div id="birthSetup">
+      <label for="babyBirth">Geburtsdatum (für passende Empfehlungen)</label>
+      <div class="row">
+        <input type="date" id="babyBirth" style="background:#FBF8FA;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-family:inherit;font-size:.95rem;color:var(--ink);width:100%">
+        <button class="btn-ghost btn-small" id="birthSave" style="flex:0 0 auto">OK</button>
+      </div>
+    </div>
+    <div id="sleepMain" hidden>
+      <div class="feed-status">
+        <div class="hint" id="awakeLabel">Wach seit</div>
+        <div class="big" id="awakeTime">–</div>
+        <div class="hint" id="sleepRec"></div>
+      </div>
+      <button class="btn-primary" id="sleepToggleBtn" style="width:100%">😴 Schläft jetzt</button>
+      <div class="center mt" id="sleepTimer" hidden>
+        <span class="serif" style="font-size:1.6rem;color:var(--accent-deep)" id="sleepElapsed">0:00</span>
+      </div>
+      <details class="mt">
+        <summary>Schlaf manuell nachtragen</summary>
+        <div class="row mt">
+          <div><label for="manSleepFrom">Von</label><input type="time" id="manSleepFrom" style="background:#FBF8FA;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-family:inherit;width:100%"></div>
+          <div><label for="manSleepTo">Bis</label><input type="time" id="manSleepTo" style="background:#FBF8FA;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-family:inherit;width:100%"></div>
+        </div>
+        <button class="btn-ghost btn-small mt" id="manSleepSave">Speichern</button>
+      </details>
+      <div class="hint mt" id="babySleepToday"></div>
+      <div class="mt" id="babySleepList"></div>
+      <p class="hint mt">Die Zeiten sind Richtwerte nach Alter – jedes Baby hat seinen eigenen Rhythmus. Müdigkeitszeichen (Gähnen, Augenreiben, Quengeln) gehen immer vor.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Windeln heute</h2>
+    <div class="counter">
+      <span>💧 Nass</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button id="diaperWetMinus">−</button><span class="v" id="diaperWet">0</span><button id="diaperWetPlus">+</button>
+      </div>
+    </div>
+    <div class="counter">
+      <span>💩 Stuhl</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button id="diaperPooMinus">−</button><span class="v" id="diaperPoo">0</span><button id="diaperPooPlus">+</button>
+      </div>
+    </div>
+    <p class="hint mt">Grober Anhaltspunkt ab der 2. Woche: etwa 5–6 nasse Windeln am Tag. Bei Unsicherheit lieber die Hebamme fragen.</p>
+  </div>
+
+  <div class="card">
+    <h2>Vitamine &amp; Erinnerungen</h2>
+    <p class="hint">Setzt sich jeden Tag automatisch zurück.</p>
+    <div class="chips mt" id="medChips"></div>
+    <div class="row mt">
+      <input type="text" id="medInput" placeholder="Eigene Erinnerung, z. B. Eisen">
+      <button class="btn-ghost btn-small" id="medAdd" style="flex:0 0 auto">+</button>
+    </div>
+    <p class="hint mt" id="medHint">Doppeltippen auf einen Eintrag entfernt ihn dauerhaft.</p>
+  </div>
+</section>
+
+<!-- ============ IDEEN ============ -->
+<section class="tab" id="tab-ideen">
+  <div class="card draw-card">
+    <h2>Zieh eine Karte</h2>
+    <div class="drawn" id="drawnIdea">Was darf es heute sein?</div>
+    <button class="btn-primary" id="drawBtn">Karte ziehen</button>
+  </div>
+  <div class="card">
+    <h2>Selbstfürsorge-Ideen</h2>
+    <div class="chips" id="ideaFilter">
+      <button class="chip on-accent" data-f="alle">Alle</button>
+      <button class="chip" data-f="5">5 Min</button>
+      <button class="chip" data-f="15">15 Min</button>
+      <button class="chip" data-f="60">Länger</button>
+      <button class="chip" data-f="fav">★ Favoriten</button>
+    </div>
+    <div class="mt" id="ideaList"></div>
+    <details class="mt">
+      <summary>Eigene Idee hinzufügen</summary>
+      <div class="row mt">
+        <input type="text" id="ideaInput" placeholder="Deine Idee">
+        <select id="ideaDur" style="flex:0 0 100px">
+          <option value="5">5 Min</option>
+          <option value="15">15 Min</option>
+          <option value="60">Länger</option>
+        </select>
+      </div>
+      <button class="btn-ghost btn-small mt" id="ideaAdd">Hinzufügen</button>
+    </details>
+  </div>
+</section>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <button class="nav-btn active" data-tab="heute"><span class="ic">☀️</span>Heute</button>
+    <button class="nav-btn" data-tab="baby"><span class="ic">🍼</span>Baby</button>
+    <button class="nav-btn sos" data-tab="ruhe"><span class="ic">🫧</span>Ruhe</button>
+    <button class="nav-btn" data-tab="tagebuch"><span class="ic">✏️</span>Tagebuch</button>
+    <button class="nav-btn" data-tab="rueckblick"><span class="ic">🌙</span>Rückblick</button>
+    <button class="nav-btn" data-tab="ideen"><span class="ic">🌷</span>Ideen</button>
+  </div>
+</nav>
+<div class="toast" id="toast"></div>
+<script>
+/* ================= Daten ================= */
+const KEY='ruheort-v1';
+const defaultAnchors=[
+  'Das ist Angst, keine Gefahr. Es geht vorbei.',
+  'Ich habe das schon oft geschafft.',
+  'Ich muss jetzt nichts leisten – nur atmen.'
+];
+const defaultIdeas=[
+  {t:'Eine Tasse Tee in Ruhe trinken, ohne Handy',d:5},
+  {t:'3 Minuten ans offene Fenster stehen und tief atmen',d:5},
+  {t:'Hände eincremen und die Berührung bewusst spüren',d:5},
+  {t:'Lieblingslied laut hören',d:5},
+  {t:'Sophie-Zeit: 15 Minuten nur für dich, Tür zu',d:15},
+  {t:'Kurzer Spaziergang um den Block',d:15},
+  {t:'Warme Dusche mit gutem Duschgel',d:15},
+  {t:'Dehnen oder sanftes Yoga auf der Matte',d:15},
+  {t:'Eine Freundin anrufen',d:15},
+  {t:'Langes Bad mit Kerzen',d:60},
+  {t:'Buch lesen mit Decke und Tee',d:60},
+  {t:'Serie schauen ohne schlechtes Gewissen',d:60},
+  {t:'Ausgiebige Hautpflege-Routine',d:15},
+  {t:'Etwas Schönes backen oder kochen – nur weil du Lust hast',d:60},
+  {t:'Früh ins Bett gehen',d:60}
+];
+const defaultMeds=['Vitamin D fürs Baby','Eigene Vitamine / Eisen'];
+const defaultHelps=[
+  'Kannst du das Baby eine Stunde nehmen? Ich brauche kurz Ruhe.',
+  'Magst du uns heute etwas zu essen vorbeibringen?',
+  'Mir ist gerade alles zu viel. Kannst du einfach da sein?',
+  'Kannst du einkaufen gehen? Ich schicke dir eine Liste.'
+];
+const careItemsWB=[
+  {id:'trinken',t:'💧 Beim Stillen getrunken'},
+  {id:'hinlegen',t:'🛏️ Hingelegt, als das Baby schlief'},
+  {id:'essen',t:'🍽️ Warm gegessen'},
+  {id:'dusche',t:'🚿 Geduscht'},
+  {id:'nein',t:'🙅‍♀️ Besuch abgesagt / Nein gesagt'},
+  {id:'luft',t:'🌿 Kurz an die frische Luft'},
+  {id:'hilfe',t:'🤝 Um Hilfe gebeten'}
+];
+const careItems=[
+  {id:'wasser',t:'💧 Genug getrunken'},
+  {id:'luft',t:'🌿 Frische Luft'},
+  {id:'essen',t:'🍽️ In Ruhe gegessen'},
+  {id:'pause',t:'🛋️ Echte Pause'},
+  {id:'metime',t:'💜 Zeit nur für mich'},
+  {id:'bewegung',t:'🚶‍♀️ Bewegung'},
+  {id:'schlaf',t:'😴 Ausgeschlafen'}
+];
+const helpedItems=['Atemübung','5-4-3-2-1','Frische Luft','Gespräch','Wasser trinken','Hinsetzen / Rückzug','Ablenkung','Kaltes Wasser über die Hände'];
+const affirmations=[
+  'Du musst heute nicht perfekt sein. Du musst nur du sein.',
+  'Ein Schritt nach dem anderen reicht völlig.',
+  'Deine Gefühle dürfen da sein. Alle.',
+  'Du kümmerst dich um so viele – heute auch ein bisschen um dich.',
+  'Ruhe ist kein Luxus. Ruhe ist Pflege.',
+  'Du bist stärker, als sich dieser Moment anfühlt.',
+  'Es ist okay, um Hilfe zu bitten.',
+  'Kleine Fortschritte sind Fortschritte.',
+  'Dein Körper trägt dich durch so viel. Sei sanft mit ihm.',
+  'Du darfst Nein sagen, ohne dich zu erklären.',
+  'Heute zählt gut genug. Nicht perfekt.',
+  'Was du fühlst, ist echt – und es geht vorbei.',
+  'Du bist genug. Genau so.',
+  'Atmen. Ankommen. Weitermachen – in deinem Tempo.'
+];
+const prompts=[
+  'Was hat mir heute ein kleines Lächeln geschenkt?',
+  'Wovon hätte ich gern mehr in meinem Alltag?',
+  'Was würde ich einer guten Freundin raten, die fühlt wie ich?',
+  'Welcher Moment heute hat sich ruhig angefühlt?',
+  'Was darf ich loslassen?',
+  'Worauf freue ich mich – und sei es etwas ganz Kleines?',
+  'Was hat mein Körper mir heute gesagt?',
+  'Wofür möchte ich mir selbst danken?'
+];
+
+let S=load();
+function load(){
+  try{
+    const raw=localStorage.getItem(KEY);
+    if(raw){const s=JSON.parse(raw);return Object.assign({checkins:[],journal:[],grats:[],panics:[],care:{},anchors:defaultAnchors.slice(),ideas:[],favs:[],feeds:[],activeFeed:null,pumps:[],diapers:{},meds:defaultMeds.slice(),medsDone:{},sleep:[],helps:defaultHelps.slice(),wochenbett:false,babyBirth:null,babySleeps:[],activeSleep:null},s);}
+  }catch(e){}
+  return {checkins:[],journal:[],grats:[],panics:[],care:{},anchors:defaultAnchors.slice(),ideas:[],favs:[],feeds:[],activeFeed:null,pumps:[],diapers:{},meds:defaultMeds.slice(),medsDone:{},sleep:[],helps:defaultHelps.slice(),wochenbett:false,babyBirth:null,babySleeps:[],activeSleep:null};
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){toast('Speichern nicht möglich');}}
+const $=id=>document.getElementById(id);
+const todayKey=()=>new Date().toISOString().slice(0,10);
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
+function fmtD(d){return new Date(d).toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'});}
+
+/* ================= Kopf ================= */
+(function(){
+  const h=new Date().getHours();
+  $('greeting').textContent=h<11?'Guten Morgen, Sophie':h<18?'Hallo Sophie':'Guten Abend, Sophie';
+  $('todayDate').textContent=new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
+  const dayN=Math.floor(Date.now()/86400000);
+  $('affirmText').textContent=affirmations[dayN%affirmations.length];
+  $('promptText').textContent=prompts[dayN%prompts.length];
+})();
+
+/* ================= Navigation ================= */
+document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  $('tab-'+b.dataset.tab).classList.add('active');
+  window.scrollTo({top:0});
+  if(b.dataset.tab==='rueckblick')renderReview();
+}));
+
+/* ================= Check-in ================= */
+let moodSel=0;
+document.querySelectorAll('.mood').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.mood').forEach(x=>x.classList.remove('sel'));
+  b.classList.add('sel');moodSel=+b.dataset.v;
+}));
+$('energy').addEventListener('input',e=>$('energyVal').textContent=e.target.value);
+$('saveCheckin').addEventListener('click',()=>{
+  if(!moodSel){toast('Wähle zuerst eine Stimmung');return;}
+  S.checkins.push({d:todayKey(),ts:Date.now(),mood:moodSel,energy:+$('energy').value,note:$('checkinNote').value.trim()});
+  save();$('checkinNote').value='';renderCheckinInfo();toast('Check-in gespeichert 💜');
+});
+function renderCheckinInfo(){
+  const n=S.checkins.filter(c=>c.d===todayKey()).length;
+  $('checkinToday').textContent=n?`Heute bereits ${n}× eingecheckt.`:'';
+}
+renderCheckinInfo();
+
+/* ================= Selbstfürsorge-Chips ================= */
+function renderCare(){
+  const done=S.care[todayKey()]||[];
+  const items=S.wochenbett?careItemsWB:careItems;
+  $('wbToggle').textContent=S.wochenbett?'Wochenbett: an 🌸':'Wochenbett-Modus';
+  $('wbToggle').style.background=S.wochenbett?'var(--peach)':'';
+  $('careChips').innerHTML='';
+  items.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='chip'+(done.includes(c.id)?' on':'');
+    b.textContent=c.t;
+    b.onclick=()=>{
+      const arr=S.care[todayKey()]||[];
+      S.care[todayKey()]=arr.includes(c.id)?arr.filter(x=>x!==c.id):[...arr,c.id];
+      save();renderCare();
+    };
+    $('careChips').appendChild(b);
+  });
+}
+renderCare();
+$('wbToggle').addEventListener('click',()=>{S.wochenbett=!S.wochenbett;save();renderCare();});
+
+/* ================= Schlaf ================= */
+$('sleepHours').addEventListener('input',e=>$('sleepHoursVal').textContent=e.target.value);
+$('sleepWakes').addEventListener('input',e=>$('sleepWakesVal').textContent=e.target.value);
+$('saveSleep').addEventListener('click',()=>{
+  S.sleep=S.sleep.filter(s=>s.d!==todayKey());
+  S.sleep.push({d:todayKey(),hours:+$('sleepHours').value,wakes:+$('sleepWakes').value});
+  save();renderSleepInfo();toast('Nacht gespeichert 🌙');
+});
+function renderSleepInfo(){
+  const s=S.sleep.find(x=>x.d===todayKey());
+  $('sleepInfo').textContent=s?`Heute erfasst: ${s.hours} Std, ${s.wakes}× aufgewacht.`:'';
+  if(s){$('sleepHours').value=s.hours;$('sleepHoursVal').textContent=s.hours;$('sleepWakes').value=s.wakes;$('sleepWakesVal').textContent=s.wakes;}
+}
+renderSleepInfo();
+
+/* ================= Stillen ================= */
+const sideName={L:'links',R:'rechts',B:'beide Seiten',F:'Flasche',A:'abgepumpt'};
+let feedTick=null;
+function fmtAgo(ts){
+  const m=Math.floor((Date.now()-ts)/60000);
+  if(m<60)return `vor ${m} Min`;
+  const h=Math.floor(m/60);
+  return `vor ${h} Std ${m%60} Min`;
+}
+function renderFeedStatus(){
+  const last=[...S.feeds].sort((a,b)=>b.ts-a.ts)[0];
+  if(last){
+    $('feedStatus').textContent=`${fmtAgo(last.ts)} · ${sideName[last.side]}`;
+    const next=(last.side==='L')?'rechts':(last.side==='R')?'links':null;
+    $('feedHint').textContent=next?`Nächste Runde vermutlich: ${next}`:'';
+  }else{
+    $('feedStatus').textContent='Noch kein Eintrag';$('feedHint').textContent='';
+  }
+  const today=S.feeds.filter(f=>f.d===todayKey());
+  const mins=today.reduce((s,f)=>s+(f.dur||0),0);
+  $('feedToday').textContent=today.length?`Heute: ${today.length}× gestillt/gefüttert, insgesamt ${mins} Min.`:'';
+  const pt=S.pumps.filter(p=>p.d===todayKey());
+  $('pumpToday').textContent=pt.length?`Heute abgepumpt: ${pt.reduce((s,p)=>s+p.ml,0)} ml (${pt.length}×).`:'';
+}
+function startFeed(side){
+  if(S.activeFeed){toast('Es läuft schon eine Stillzeit');return;}
+  S.activeFeed={start:Date.now(),side};save();renderActiveFeed();
+}
+function renderActiveFeed(){
+  const a=S.activeFeed;
+  clearInterval(feedTick);
+  $('feedTimer').hidden=!a;
+  $('feedL').classList.toggle('running',!!a&&a.side==='L');
+  $('feedR').classList.toggle('running',!!a&&a.side==='R');
+  if(a){
+    const upd=()=>{
+      const s=Math.floor((Date.now()-a.start)/1000);
+      $('feedElapsed').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+    };
+    upd();feedTick=setInterval(upd,1000);
+  }
+}
+$('feedL').addEventListener('click',()=>startFeed('L'));
+$('feedR').addEventListener('click',()=>startFeed('R'));
+$('feedStop').addEventListener('click',()=>{
+  const a=S.activeFeed;if(!a)return;
+  const dur=Math.max(1,Math.round((Date.now()-a.start)/60000));
+  S.feeds.push({d:todayKey(),ts:a.start,side:a.side,dur});
+  S.activeFeed=null;save();renderActiveFeed();renderFeedStatus();
+  toast(`Gespeichert: ${dur} Min ${sideName[a.side]} 🍼`);
+});
+$('manSave').addEventListener('click',()=>{
+  const dur=+$('manDur').value;
+  if(!dur){toast('Dauer in Minuten angeben');return;}
+  S.feeds.push({d:todayKey(),ts:Date.now(),side:$('manSide').value,dur});
+  $('manDur').value='';save();renderFeedStatus();toast('Eintrag gespeichert 🍼');
+});
+$('pumpSave').addEventListener('click',()=>{
+  const ml=+$('pumpMl').value;
+  if(!ml){toast('Menge in ml angeben');return;}
+  S.pumps.push({d:todayKey(),ts:Date.now(),ml,side:$('pumpSide').value});
+  $('pumpMl').value='';save();renderFeedStatus();toast('Abpumpen eingetragen');
+});
+renderFeedStatus();renderActiveFeed();
+setInterval(renderFeedStatus,60000);
+
+/* ================= Baby-Schlaf ================= */
+// Wachfenster in Minuten nach Alter (Richtwerte)
+function wakeWindow(){
+  if(!S.babyBirth)return null;
+  const weeks=(Date.now()-new Date(S.babyBirth).getTime())/(7*86400000);
+  const m=weeks/4.345; // Monate
+  if(m<1)  return {min:40, max:60,  bett:'kein fester Nachtschlaf – schläft rund um die Uhr'};
+  if(m<2)  return {min:45, max:75,  bett:'zwischen 21:00 und 23:00 (noch flexibel)'};
+  if(m<3)  return {min:60, max:90,  bett:'zwischen 20:00 und 22:00'};
+  if(m<4)  return {min:75, max:120, bett:'zwischen 19:30 und 21:00'};
+  if(m<6)  return {min:90, max:150, bett:'zwischen 19:00 und 20:00'};
+  if(m<8)  return {min:120,max:180, bett:'zwischen 18:30 und 19:30'};
+  if(m<10) return {min:150,max:210, bett:'zwischen 18:30 und 19:30'};
+  if(m<12) return {min:180,max:240, bett:'zwischen 18:30 und 19:30'};
+  if(m<18) return {min:240,max:330, bett:'zwischen 18:30 und 19:30'};
+  return {min:300,max:390, bett:'zwischen 19:00 und 20:00'};
+}
+function fmtTime(ts){return new Date(ts).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});}
+function fmtDur(min){return min>=60?Math.floor(min/60)+' Std '+Math.round(min%60)+' Min':Math.round(min)+' Min';}
+let babyTick=null;
+function renderBabySleep(){
+  const has=!!S.babyBirth;
+  $('birthSetup').hidden=has;
+  $('sleepMain').hidden=!has;
+  if(!has)return;
+  clearInterval(babyTick);
+  const a=S.activeSleep;
+  const ww=wakeWindow();
+  $('sleepTimer').hidden=!a;
+  $('sleepToggleBtn').textContent=a?'🌅 Ist aufgewacht':'😴 Schläft jetzt';
+  $('sleepToggleBtn').classList.toggle('btn-sage',!!a);
+  if(a){
+    $('awakeLabel').textContent='Schläft seit';
+    const upd=()=>{
+      $('awakeTime').textContent=fmtTime(a.start);
+      const s=Math.floor((Date.now()-a.start)/1000);
+      $('sleepElapsed').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+    };
+    upd();babyTick=setInterval(upd,1000);
+    $('sleepRec').textContent='';
+  }else{
+    // Wach seit = Ende des letzten Schlafs
+    const last=[...S.babySleeps].sort((x,y)=>y.end-x.end)[0];
+    $('awakeLabel').textContent='Wach seit';
+    if(last){
+      const upd=()=>{
+        const awakeMin=(Date.now()-last.end)/60000;
+        $('awakeTime').textContent=fmtDur(awakeMin)+' (seit '+fmtTime(last.end)+')';
+        if(ww){
+          const from=new Date(last.end+ww.min*60000);
+          const to=new Date(last.end+ww.max*60000);
+          const hour=new Date().getHours();
+          const evening=hour>=16&&to.getHours()>=18;
+          if(evening){
+            $('sleepRec').textContent='Jetzt Richtung Nachtschlaf: '+ww.bett+'. Rechnerisch müde ab ca. '+fmtTime(from)+'.';
+          }else if(awakeMin>ww.max){
+            $('sleepRec').textContent='Wachfenster ('+fmtDur(ww.min)+'–'+fmtDur(ww.max)+') ist um – vermutlich schon übermüdet. Ruhig ins Bett begleiten.';
+          }else{
+            $('sleepRec').textContent='Nächstes Schläfchen: ca. '+fmtTime(from)+'–'+fmtTime(to)+' (Wachfenster '+fmtDur(ww.min)+'–'+fmtDur(ww.max)+').';
+          }
+        }
+      };
+      upd();babyTick=setInterval(upd,60000);
+    }else{
+      $('awakeTime').textContent='Noch kein Schlaf erfasst';
+      $('sleepRec').textContent=ww?'Wachfenster in diesem Alter: '+fmtDur(ww.min)+'–'+fmtDur(ww.max)+'. Nachtschlaf: '+ww.bett+'.':'';
+    }
+  }
+  // Tagesübersicht
+  const today=S.babySleeps.filter(x=>x.d===todayKey());
+  const total=today.reduce((s,x)=>s+(x.end-x.start)/60000,0);
+  $('babySleepToday').textContent=today.length?('Heute: '+today.length+'× geschlafen, insgesamt '+fmtDur(total)+'.'):'';
+  $('babySleepList').innerHTML=today.sort((x,y)=>y.start-x.start).slice(0,5)
+    .map(x=>'<div class="entry"><div class="meta"><span>'+fmtTime(x.start)+' – '+fmtTime(x.end)+'</span><span>'+fmtDur((x.end-x.start)/60000)+'</span></div></div>').join('');
+}
+$('birthSave').addEventListener('click',()=>{
+  const v=$('babyBirth').value;
+  if(!v){toast('Bitte Datum wählen');return;}
+  S.babyBirth=v;save();renderBabySleep();
+});
+$('sleepToggleBtn').addEventListener('click',()=>{
+  if(S.activeSleep){
+    const a=S.activeSleep;
+    if(Date.now()-a.start>60000){
+      S.babySleeps.push({d:new Date(a.start).toISOString().slice(0,10),start:a.start,end:Date.now()});
+      toast('Schlaf gespeichert 😴');
+    }
+    S.activeSleep=null;
+  }else{
+    S.activeSleep={start:Date.now()};
+  }
+  save();renderBabySleep();
+});
+$('manSleepSave').addEventListener('click',()=>{
+  const f=$('manSleepFrom').value,t=$('manSleepTo').value;
+  if(!f||!t){toast('Von und Bis angeben');return;}
+  const base=todayKey();
+  let start=new Date(base+'T'+f).getTime(),end=new Date(base+'T'+t).getTime();
+  if(end<=start)start-=86400000; // über Mitternacht: Start war gestern
+  S.babySleeps.push({d:new Date(start).toISOString().slice(0,10),start,end});
+  $('manSleepFrom').value='';$('manSleepTo').value='';
+  save();renderBabySleep();toast('Schlaf nachgetragen');
+});
+renderBabySleep();
+
+/* ================= Windeln ================= */
+function diaper(){return S.diapers[todayKey()]||(S.diapers[todayKey()]={wet:0,poo:0});}
+function renderDiapers(){
+  const d=diaper();
+  $('diaperWet').textContent=d.wet;$('diaperPoo').textContent=d.poo;
+}
+[['diaperWetPlus','wet',1],['diaperWetMinus','wet',-1],['diaperPooPlus','poo',1],['diaperPooMinus','poo',-1]].forEach(([id,k,v])=>{
+  $(id).addEventListener('click',()=>{
+    const d=diaper();d[k]=Math.max(0,d[k]+v);save();renderDiapers();
+  });
+});
+renderDiapers();
+
+/* ================= Erinnerungen ================= */
+function renderMeds(){
+  const done=S.medsDone[todayKey()]||[];
+  $('medChips').innerHTML='';
+  S.meds.forEach((m,i)=>{
+    const b=document.createElement('button');
+    b.className='chip'+(done.includes(m)?' on-accent':'');
+    b.textContent=(done.includes(m)?'✓ ':'')+m;
+    b.onclick=()=>{
+      const arr=S.medsDone[todayKey()]||[];
+      S.medsDone[todayKey()]=arr.includes(m)?arr.filter(x=>x!==m):[...arr,m];
+      save();renderMeds();
+    };
+    b.ondblclick=()=>{if(confirm(`„${m}" dauerhaft entfernen?`)){S.meds.splice(i,1);save();renderMeds();}};
+    $('medChips').appendChild(b);
+  });
+}
+renderMeds();
+$('medAdd').addEventListener('click',()=>{
+  const v=$('medInput').value.trim();
+  if(!v)return;
+  S.meds.push(v);$('medInput').value='';save();renderMeds();
+});
+
+/* ================= Hilfe-Sätze ================= */
+function renderHelps(){
+  $('helpList').innerHTML='';
+  S.helps.forEach((h,i)=>{
+    const li=document.createElement('li');
+    li.textContent=h;li.style.cursor='pointer';
+    li.title='Tippen: kopieren · Doppeltippen: löschen';
+    li.onclick=()=>{
+      if(navigator.clipboard){navigator.clipboard.writeText(h).then(()=>toast('Kopiert – jetzt einfach verschicken 💜'));}
+    };
+    li.ondblclick=()=>{if(confirm('Diesen Satz löschen?')){S.helps.splice(i,1);save();renderHelps();}};
+    $('helpList').appendChild(li);
+  });
+}
+renderHelps();
+$('helpAdd').addEventListener('click',()=>{
+  const v=$('helpInput').value.trim();
+  if(!v)return;
+  S.helps.push(v);$('helpInput').value='';save();renderHelps();
+});
+
+/* ================= Atemübung ================= */
+const modes={
+  calm:[['Einatmen',5],['Ausatmen',5]],
+  '478':[['Einatmen',4],['Halten',7],['Ausatmen',8]],
+  box:[['Einatmen',4],['Halten',4],['Ausatmen',4],['Halten',4]]
+};
+let breathMode='calm',breathing=false,bTimer=null;
+document.querySelectorAll('.breath-mode').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.breath-mode').forEach(x=>x.classList.remove('sel'));
+  b.classList.add('sel');breathMode=b.dataset.mode;
+  if(breathing){stopBreath();startBreath();}
+}));
+function setPetals(scale,dur){
+  document.querySelectorAll('.petal').forEach((p,i)=>{
+    p.style.setProperty('--dur',dur+'s');
+    p.style.transform=`scale(${scale+(i?0.06:0)})`;
+  });
+}
+function startBreath(){
+  breathing=true;$('breathToggle').textContent='Stopp';
+  $('bloom').classList.add('breathing');
+  let seq=modes[breathMode],pi=0;
+  function phase(){
+    const [name,secs]=seq[pi];
+    $('breathPhase').textContent=name;
+    if(name==='Einatmen')setPetals(1,secs);
+    else if(name==='Ausatmen')setPetals(.6,secs);
+    let left=secs;
+    $('breathCount').textContent=left;
+    bTimer=setInterval(()=>{
+      left--;
+      if(left<=0){clearInterval(bTimer);pi=(pi+1)%seq.length;phase();}
+      else $('breathCount').textContent=left;
+    },1000);
+  }
+  phase();
+}
+function stopBreath(){
+  breathing=false;clearInterval(bTimer);
+  $('breathToggle').textContent='Atmen starten';
+  $('breathPhase').textContent='Bereit?';$('breathCount').textContent='·';
+  $('bloom').classList.remove('breathing');setPetals(.6,0.3);
+}
+$('breathToggle').addEventListener('click',()=>breathing?stopBreath():startBreath());
+
+/* ================= Grounding ================= */
+const groundSteps=[
+  [5,'Dinge, die du SIEHST','Schau dich um. Benenne sie leise für dich.'],
+  [4,'Dinge, die du FÜHLST','Der Stuhl, deine Kleidung, der Boden unter den Füßen …'],
+  [3,'Dinge, die du HÖRST','Auch ganz leise Geräusche zählen.'],
+  [2,'Dinge, die du RIECHST','Oder zwei Gerüche, die du magst.'],
+  [1,'Sache, die du SCHMECKST','Ein Schluck Wasser hilft.']
+];
+let gi=0;
+$('groundStart').addEventListener('click',()=>{
+  gi=0;showGround();$('groundStep').hidden=false;$('groundNext').hidden=false;
+  $('groundStart').textContent='Neu starten';
+});
+$('groundNext').addEventListener('click',()=>{
+  gi++;
+  if(gi>=groundSteps.length){
+    $('groundNum').textContent='💜';$('groundSense').textContent='Gut gemacht.';
+    $('groundHint').textContent='Du bist hier. Genau jetzt. Das reicht.';
+    $('groundNext').hidden=true;return;
+  }
+  showGround();
+});
+function showGround(){
+  const [n,s,h]=groundSteps[gi];
+  $('groundNum').textContent=n;$('groundSense').textContent=s;$('groundHint').textContent=h;
+}
+
+/* ================= Anker ================= */
+function renderAnchors(){
+  $('anchorList').innerHTML='';
+  S.anchors.forEach((a,i)=>{
+    const li=document.createElement('li');
+    li.textContent=a;
+    li.title='Doppeltippen zum Löschen';
+    li.ondblclick=()=>{if(confirm('Diesen Anker löschen?')){S.anchors.splice(i,1);save();renderAnchors();}};
+    $('anchorList').appendChild(li);
+  });
+}
+renderAnchors();
+$('anchorAdd').addEventListener('click',()=>{
+  const v=$('anchorInput').value.trim();
+  if(!v)return;
+  S.anchors.push(v);$('anchorInput').value='';save();renderAnchors();
+});
+
+/* ================= Panik-Log ================= */
+let intSel=0;const helpedSel=new Set();
+for(let i=1;i<=10;i++){
+  const b=document.createElement('button');b.textContent=i;
+  b.onclick=()=>{intSel=i;document.querySelectorAll('#intensityScale button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');};
+  $('intensityScale').appendChild(b);
+}
+helpedItems.forEach(h=>{
+  const b=document.createElement('button');b.className='chip';b.textContent=h;
+  b.onclick=()=>{helpedSel.has(h)?helpedSel.delete(h):helpedSel.add(h);b.classList.toggle('on');};
+  $('helpedChips').appendChild(b);
+});
+$('savePanic').addEventListener('click',()=>{
+  if(!intSel){toast('Wähle eine Stärke aus');return;}
+  S.panics.push({d:todayKey(),ts:Date.now(),intensity:intSel,trigger:$('panicTrigger').value.trim(),helped:[...helpedSel],note:$('panicNote').value.trim()});
+  save();
+  intSel=0;helpedSel.clear();
+  document.querySelectorAll('#intensityScale button, #helpedChips .chip').forEach(x=>x.classList.remove('sel','on'));
+  $('panicTrigger').value='';$('panicNote').value='';
+  toast('Gespeichert. Gut, dass es vorbei ist. 💜');
+});
+
+/* ================= Tagebuch ================= */
+$('newPrompt').addEventListener('click',()=>{
+  $('promptText').textContent=prompts[Math.floor(Math.random()*prompts.length)];
+});
+$('saveGrat').addEventListener('click',()=>{
+  const g=[$('grat1').value,$('grat2').value,$('grat3').value].map(x=>x.trim()).filter(Boolean);
+  if(!g.length){toast('Ein gutes Ding reicht schon');return;}
+  S.grats.push({d:todayKey(),ts:Date.now(),items:g});
+  save();['grat1','grat2','grat3'].forEach(i=>$(i).value='');
+  renderJournalList();toast('Gespeichert 🌿');
+});
+$('saveJournal').addEventListener('click',()=>{
+  const t=$('journalText').value.trim();
+  if(!t){toast('Noch nichts geschrieben');return;}
+  S.journal.push({d:todayKey(),ts:Date.now(),prompt:$('promptText').textContent,text:t});
+  save();$('journalText').value='';renderJournalList();toast('Eintrag gespeichert ✏️');
+});
+function renderJournalList(){
+  const all=[...S.journal.map(j=>({...j,type:'j'})),...S.grats.map(g=>({...g,type:'g'}))]
+    .sort((a,b)=>b.ts-a.ts).slice(0,10);
+  if(!all.length){$('journalList').innerHTML='<p class="hint">Noch keine Einträge.</p>';return;}
+  $('journalList').innerHTML=all.map(e=>{
+    if(e.type==='g')return `<div class="entry"><div class="meta"><span>${fmtD(e.ts)}</span><span>Drei gute Dinge</span></div><div class="body">${e.items.map(i=>'🌿 '+esc(i)).join('\n')}</div></div>`;
+    return `<div class="entry"><div class="meta"><span>${fmtD(e.ts)}</span><span>Freies Schreiben</span></div><div class="body">${esc(e.text)}</div></div>`;
+  }).join('');
+}
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+renderJournalList();
+
+/* ================= Rückblick ================= */
+function renderReview(){
+  // Chart: Tagesmittel Stimmung, letzte 14 Tage
+  const days=[];
+  for(let i=13;i>=0;i--){
+    const d=new Date(Date.now()-i*86400000).toISOString().slice(0,10);
+    const cs=S.checkins.filter(c=>c.d===d);
+    days.push({d,avg:cs.length?cs.reduce((s,c)=>s+c.mood,0)/cs.length:null});
+  }
+  if(days.some(x=>x.avg!==null)){
+    const W=470,H=150,P=24;
+    const x=i=>P+i*(W-2*P)/13;
+    const y=v=>H-P-(v-1)*(H-2*P)/4;
+    let path='',dots='';
+    let prev=null;
+    days.forEach((dd,i)=>{
+      if(dd.avg===null){prev=null;return;}
+      const px=x(i),py=y(dd.avg);
+      path+=(prev===null?`M${px},${py}`:`L${px},${py}`);
+      dots+=`<circle cx="${px}" cy="${py}" r="4" fill="#A0648C"/>`;
+      prev=dd.avg;
+    });
+    const labels=days.map((dd,i)=>i%3===0?`<text x="${x(i)}" y="${H-4}" font-size="9" fill="#8A7A90" text-anchor="middle">${dd.d.slice(8,10)}.${dd.d.slice(5,7)}.</text>`:'').join('');
+    const grid=[1,3,5].map(v=>`<line x1="${P}" x2="${W-P}" y1="${y(v)}" y2="${y(v)}" stroke="#EBE2E8"/><text x="4" y="${y(v)+3}" font-size="9" fill="#8A7A90">${v}</text>`).join('');
+    $('moodChart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%">${grid}<path d="${path}" fill="none" stroke="#A0648C" stroke-width="2.5" stroke-linecap="round"/>${dots}${labels}</svg>`;
+  }
+  // Stats
+  const week=Date.now()-7*86400000;
+  const ciW=S.checkins.filter(c=>c.ts>=week);
+  const avgMood=ciW.length?(ciW.reduce((s,c)=>s+c.mood,0)/ciW.length).toFixed(1):'–';
+  const avgEn=ciW.length?(ciW.reduce((s,c)=>s+c.energy,0)/ciW.length).toFixed(1):'–';
+  const panW=S.panics.filter(p=>p.ts>=week).length;
+  const careW=Object.entries(S.care).filter(([d])=>new Date(d).getTime()>=week-86400000).reduce((s,[,v])=>s+v.length,0);
+  const slW=S.sleep.filter(s=>new Date(s.d).getTime()>=week-86400000);
+  const avgSl=slW.length?(slW.reduce((s,x)=>s+x.hours,0)/slW.length).toFixed(1)+' h':'–';
+  const feedsToday=S.feeds.filter(f=>f.d===todayKey()).length;
+  $('statGrid').innerHTML=`
+    <div class="stat"><div class="v">${avgMood}</div><div class="l">Ø Stimmung / Woche</div></div>
+    <div class="stat"><div class="v">${avgEn}</div><div class="l">Ø Energie / Woche</div></div>
+    <div class="stat"><div class="v">${avgSl}</div><div class="l">Ø Schlaf / Woche</div></div>
+    <div class="stat"><div class="v">${panW}</div><div class="l">Schwere Momente</div></div>
+    <div class="stat"><div class="v">${careW}</div><div class="l">Selbstfürsorge-Häkchen</div></div>
+    <div class="stat"><div class="v">${feedsToday}</div><div class="l">Stillen heute</div></div>`;
+  // Sanfter Hinweis bei anhaltend niedriger Stimmung
+  const two=Date.now()-14*86400000;
+  const ci14=S.checkins.filter(c=>c.ts>=two);
+  const low=ci14.length>=5&&(ci14.reduce((s,c)=>s+c.mood,0)/ci14.length)<=2.4;
+  let note=document.getElementById('moodNote');
+  if(low){
+    if(!note){
+      note=document.createElement('div');note.id='moodNote';note.className='notice';
+      note.textContent='Deine Stimmung war in den letzten zwei Wochen oft niedrig. Das kann viele Gründe haben – und es lohnt sich, das bei deiner Hebamme oder Ärztin anzusprechen. Du musst da nicht allein durch.';
+      $('statGrid').parentElement.appendChild(note);
+    }
+  }else if(note){note.remove();}
+  // Was hilft
+  const counts={};
+  S.panics.forEach(p=>p.helped.forEach(h=>counts[h]=(counts[h]||0)+1));
+  const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  $('helpStats').innerHTML=top.length
+    ? top.map(([h,c])=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)"><span>${esc(h)}</span><span class="tag">${c}×</span></div>`).join('')
+    : '<p class="hint">Noch keine Daten.</p>';
+  // Panik-Liste
+  const ps=[...S.panics].sort((a,b)=>b.ts-a.ts).slice(0,8);
+  $('panicList').innerHTML=ps.length?ps.map(p=>`
+    <div class="entry">
+      <div class="meta"><span>${fmtD(p.ts)}</span><span>Stärke ${p.intensity}/10</span></div>
+      ${p.trigger?`<div class="body">Auslöser: ${esc(p.trigger)}</div>`:''}
+      ${p.note?`<div class="body">${esc(p.note)}</div>`:''}
+      ${p.helped.length?`<div class="tagline">${p.helped.map(h=>`<span class="tag">${esc(h)}</span>`).join('')}</div>`:''}
+    </div>`).join(''):'<p class="hint">Keine Einträge – schön!</p>';
+}
+
+/* Export / Import */
+$('exportBtn').addEventListener('click',()=>{
+  const blob=new Blob([JSON.stringify(S,null,1)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='ruheort-backup-'+todayKey()+'.json';
+  a.click();
+});
+$('importBtn').addEventListener('click',()=>$('importFile').click());
+$('importFile').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{try{S=Object.assign(S,JSON.parse(r.result));save();location.reload();}catch(err){toast('Datei konnte nicht gelesen werden');}};
+  r.readAsText(f);
+});
+
+/* ================= Ideen ================= */
+let ideaF='alle';
+function allIdeas(){return [...defaultIdeas,...S.ideas];}
+document.querySelectorAll('#ideaFilter .chip').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#ideaFilter .chip').forEach(x=>x.classList.remove('on-accent'));
+  b.classList.add('on-accent');ideaF=b.dataset.f;renderIdeas();
+}));
+function renderIdeas(){
+  let list=allIdeas().map((it,i)=>({...it,i}));
+  if(ideaF==='fav')list=list.filter(it=>S.favs.includes(it.t));
+  else if(ideaF!=='alle')list=list.filter(it=>String(it.d)===ideaF);
+  $('ideaList').innerHTML=list.length?'':'<p class="hint">Nichts gefunden.</p>';
+  list.forEach(it=>{
+    const div=document.createElement('div');div.className='idea';
+    const fav=S.favs.includes(it.t);
+    div.innerHTML=`<span class="txt">${esc(it.t)}</span><span class="dur">${it.d===60?'länger':it.d+' Min'}</span>`;
+    const fb=document.createElement('button');
+    fb.className='fav'+(fav?' on':'');fb.textContent='★';fb.setAttribute('aria-label','Favorit');
+    fb.onclick=()=>{S.favs=fav?S.favs.filter(f=>f!==it.t):[...S.favs,it.t];save();renderIdeas();};
+    div.appendChild(fb);
+    $('ideaList').appendChild(div);
+  });
+}
+renderIdeas();
+$('ideaAdd').addEventListener('click',()=>{
+  const v=$('ideaInput').value.trim();
+  if(!v)return;
+  S.ideas.push({t:v,d:+$('ideaDur').value});
+  $('ideaInput').value='';save();renderIdeas();toast('Idee hinzugefügt 🌷');
+});
+$('drawBtn').addEventListener('click',()=>{
+  const pool=S.favs.length&&Math.random()<0.4?allIdeas().filter(i=>S.favs.includes(i.t)):allIdeas();
+  $('drawnIdea').textContent=pool[Math.floor(Math.random()*pool.length)].t;
+});
+</script>
+</body>
+</html>
